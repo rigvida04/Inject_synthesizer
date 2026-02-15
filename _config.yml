@@ -1,0 +1,17 @@
+# Site settings
+title: Inject Synthesizer
+description: A Jekyll website for Inject Synthesizer
+baseurl: ""
+url: "http://localhost:3000"
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
