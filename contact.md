@@ -10,8 +10,9 @@ Get in touch with the Inject Synthesizer team.
 
 ## Ways to Reach Us
 
-- **Email**: contact@injectsynthesizer.example.com
 - **GitHub**: [rigvida04/Inject_synthesizer](https://github.com/rigvida04/Inject_synthesizer)
+  - Open an issue for questions or feature requests
+  - Submit pull requests for contributions
 
 ## Feedback
 
