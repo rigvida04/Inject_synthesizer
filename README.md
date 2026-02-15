@@ -55,7 +55,13 @@ PORT=3000
 
 ### Start the Server
 
+**Important**: You must set the `ENCRYPTION_SECRET` environment variable before starting the server.
+
 ```bash
+# Set environment variable and start
+ENCRYPTION_SECRET=your-super-secret-key npm start
+
+# Or use .env file (recommended)
 npm start
 ```
 

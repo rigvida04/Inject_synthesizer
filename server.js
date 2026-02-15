@@ -5,8 +5,15 @@ const EncryptedCookieMiddleware = require('./encryptedCookieMiddleware');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Secret key for encryption (should be stored in environment variables in production)
-const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET || 'default-secret-key-change-in-production';
+// Secret key for encryption - MUST be set via environment variable
+const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
+
+if (!ENCRYPTION_SECRET) {
+  console.error('❌ ERROR: ENCRYPTION_SECRET environment variable is not set!');
+  console.error('Please set ENCRYPTION_SECRET in your environment or .env file.');
+  console.error('Example: ENCRYPTION_SECRET=your-secret-key-here node server.js');
+  process.exit(1);
+}
 
 // Initialize encrypted cookie middleware
 const encryptedCookies = new EncryptedCookieMiddleware(ENCRYPTION_SECRET);
