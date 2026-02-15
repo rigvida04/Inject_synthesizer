@@ -2,7 +2,7 @@
 title: Inject Synthesizer
 description: A Jekyll website for Inject Synthesizer
 baseurl: ""
-url: "http://localhost:3000"
+url: ""
 
 # Build settings
 markdown: kramdown
