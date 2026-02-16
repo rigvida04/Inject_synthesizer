@@ -4,7 +4,7 @@ A Jekyll-based static website for the Inject Synthesizer project.
 
 ## 🌐 Live Preview
 
-**Local Development**: http://localhost:3000
+**Local Development**: http://localhost:3000 (when running with custom port as shown below)
 
 **GitHub Pages**: Coming soon (deploy to GitHub Pages to get your live URL)
 
