@@ -4,7 +4,9 @@ A Jekyll-based static website for the Inject Synthesizer project.
 
 ## 🌐 Live Preview
 
-The website is available at: http://localhost:3000
+**Local Development**: http://localhost:3000
+
+**GitHub Pages**: Coming soon (deploy to GitHub Pages to get your live URL)
 
 ## 📋 Prerequisites
 
@@ -34,7 +36,7 @@ Start the development server:
 bundle exec jekyll serve --host 0.0.0.0 --port 3000
 ```
 
-The website will be available at http://localhost:3000
+The website will be available locally at http://localhost:3000
 
 ## 📁 Project Structure
 
