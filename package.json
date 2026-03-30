@@ -1,0 +1,28 @@
+{
+  "name": "inject_synthesizer",
+  "version": "1.0.0",
+  "description": "A synthesizer application accessible via public URL using localtunnel and GitHub Pages",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "tunnel": "node start-tunnel.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rigvida04/Inject_synthesizer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rigvida04/Inject_synthesizer/issues"
+  },
+  "homepage": "https://github.com/rigvida04/Inject_synthesizer#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "localtunnel": "^2.0.2"
+  }
+}
