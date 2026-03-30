@@ -2,13 +2,16 @@ const localtunnel = require('localtunnel');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const PORT = process.env.PORT || 3000;
+// PORT must be a number for localtunnel; convert to string only when passed to child env
+const PORT = Number(process.env.PORT) || 3000;
 const SUBDOMAIN = process.env.TUNNEL_SUBDOMAIN || 'inject-synthesizer';
 
-// Start the Express server as a child process
+let tunnel = null;
+
+// Start the Express server as a child process; 'ipc' channel lets it signal readiness
 const server = spawn('node', [path.join(__dirname, 'server.js')], {
-  stdio: 'inherit',
-  env: { ...process.env, PORT },
+  stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+  env: { ...process.env, PORT: String(PORT) },
 });
 
 server.on('error', (err) => {
@@ -16,11 +19,20 @@ server.on('error', (err) => {
   process.exit(1);
 });
 
-// Delay (ms) to allow the Express server to be ready before opening the tunnel
-const SERVER_STARTUP_DELAY_MS = 1500;
-setTimeout(async () => {
+// If the server exits unexpectedly, close the tunnel and exit non-zero
+server.on('exit', (code, signal) => {
+  if (code !== 0 || signal) {
+    console.error(`Server exited unexpectedly (code=${code}, signal=${signal})`);
+    if (tunnel) tunnel.close();
+    process.exit(code !== null ? code : 1);
+  }
+});
+
+// Open the tunnel only after the server signals it is ready via IPC
+server.once('message', async (msg) => {
+  if (msg !== 'ready') return;
   try {
-    const tunnel = await localtunnel({ port: PORT, subdomain: SUBDOMAIN });
+    tunnel = await localtunnel({ port: PORT, subdomain: SUBDOMAIN });
 
     console.log('');
     console.log('=================================================');
@@ -43,15 +55,17 @@ setTimeout(async () => {
     server.kill();
     process.exit(1);
   }
-}, SERVER_STARTUP_DELAY_MS);
+});
 
 process.on('SIGINT', () => {
   console.log('\nShutting down...');
+  if (tunnel) tunnel.close();
   server.kill();
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
+  if (tunnel) tunnel.close();
   server.kill();
   process.exit(0);
 });

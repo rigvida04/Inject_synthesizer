@@ -94,20 +94,20 @@
   </div>
 
   <script>
+    // Use new URL('.', href) so the base path is correct both at '/' and under
+    // a subpath (e.g. GitHub Pages at /Inject_synthesizer/)
+    const appBase = new URL('.', window.location.href).href.replace(/\/$/, '');
     const host = window.location.hostname;
-    const proto = window.location.protocol;
-    const port = window.location.port;
-    const base = port ? `${proto}//${host}:${port}` : `${proto}//${host}`;
     const urlEl = document.getElementById('publicUrl');
     const btnEl = document.getElementById('openBtn');
 
     if (host === 'localhost' || host === '127.0.0.1') {
       urlEl.textContent = 'Run `npm run tunnel` to get your public URL';
       btnEl.textContent = 'Open Locally';
-      btnEl.href = base;
+      btnEl.href = appBase;
     } else {
-      urlEl.textContent = base;
-      btnEl.href = base;
+      urlEl.textContent = appBase;
+      btnEl.href = appBase;
     }
   </script>
 </body>
