@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - fix/pages-tunnel-availability
+      - ready/fix-pages-tunnel
   pull_request:
     branches:
       - main
