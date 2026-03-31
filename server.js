@@ -15,24 +15,24 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// Allowed origin patterns for third-party cookie / credentialed-request support.
-// Covers localhost dev, localtunnel public URLs, and GitHub Pages.
-const ALLOWED_ORIGIN_PATTERNS = [
-  /^https?:\/\/localhost(:\d+)?$/,
-  /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
-  /^https:\/\/[a-z0-9-]+\.loca\.lt$/,
-  /^https:\/\/[a-z0-9-]+\.github\.io$/,
-];
+const configuredOrigins = [
+  process.env.PUBLIC_ORIGIN,
+  process.env.GITHUB_PAGES_ORIGIN,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  `http://localhost:${PORT}`,
+  `http://127.0.0.1:${PORT}`
+].filter(Boolean);
 
-// Enable third-party cookie support: allow credentialed cross-origin requests
-// from trusted origins so cookies work when the app is accessed via tunnel URL.
+const ALLOWED_ORIGINS = new Set(configuredOrigins);
+
+// Keep CORS strict: only explicit origins are allowed and credentials are not enabled.
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  const allowed = origin && ALLOWED_ORIGIN_PATTERNS.some((p) => p.test(origin));
+  const allowed = origin && ALLOWED_ORIGINS.has(origin);
   if (allowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   }
