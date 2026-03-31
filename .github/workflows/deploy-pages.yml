@@ -6,6 +6,7 @@ on:
       - main
       - pr-4
       - copilot/convert-localhost-to-public-url
+      - fix/pages-tunnel-availability
   workflow_dispatch:
 
 permissions:
