@@ -4,9 +4,39 @@ const path = require('path');
 
 // PORT must be a number for localtunnel; convert to string only when passed to child env
 const PORT = Number(process.env.PORT) || 3000;
-const SUBDOMAIN = process.env.TUNNEL_SUBDOMAIN || 'inject-synthesizer';
+const SUBDOMAIN = process.env.TUNNEL_SUBDOMAIN;
+const TUNNEL_RETRY_DELAY_MS = 3000;
 
 let tunnel = null;
+
+const openTunnel = async () => {
+  // Use a fixed subdomain only when explicitly provided; this avoids 503s from stale/conflicting subdomains.
+  const preferredOptions = SUBDOMAIN ? { port: PORT, subdomain: SUBDOMAIN } : { port: PORT };
+
+  try {
+    return await localtunnel(preferredOptions);
+  } catch (preferredError) {
+    if (SUBDOMAIN) {
+      console.warn(`Preferred subdomain '${SUBDOMAIN}' unavailable: ${preferredError.message}`);
+      console.warn('Falling back to an auto-assigned public URL...');
+      return localtunnel({ port: PORT });
+    }
+    throw preferredError;
+  }
+};
+
+const connectTunnelWithRetry = async () => {
+  while (true) {
+    try {
+      tunnel = await openTunnel();
+      return;
+    } catch (err) {
+      console.error(`Could not open tunnel: ${err.message}`);
+      console.error(`Retrying in ${TUNNEL_RETRY_DELAY_MS / 1000}s...`);
+      await new Promise((resolve) => setTimeout(resolve, TUNNEL_RETRY_DELAY_MS));
+    }
+  }
+};
 
 // Start the Express server as a child process; 'ipc' channel lets it signal readiness
 const server = spawn('node', [path.join(__dirname, 'server.js')], {
@@ -32,7 +62,7 @@ server.on('exit', (code, signal) => {
 server.once('message', async (msg) => {
   if (msg !== 'ready') return;
   try {
-    tunnel = await localtunnel({ port: PORT, subdomain: SUBDOMAIN });
+    await connectTunnelWithRetry();
 
     console.log('');
     console.log('=================================================');

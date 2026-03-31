@@ -39,7 +39,7 @@ This will output something like:
 
 ```
 =================================================
-  Public URL: https://inject-synthesizer.loca.lt
+  Public URL: https://<random>.loca.lt
   Share this URL to open the app on any device.
 =================================================
 ```
@@ -51,3 +51,5 @@ Share that URL with anyone — it works on phones, tablets, and other computers 
 > ```bash
 > TUNNEL_SUBDOMAIN=my-synth npm run tunnel
 > ```
+>
+> If a fixed subdomain is unavailable, the script automatically falls back to a random URL.

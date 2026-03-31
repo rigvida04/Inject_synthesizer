@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - pr-4
+      - copilot/convert-localhost-to-public-url
   workflow_dispatch:
 
 permissions:
